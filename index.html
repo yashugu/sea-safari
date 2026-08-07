@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New England Aquarium Sea Safari - Submission Portal</title>
+    <style>
+        :root {
+            --primary: #006994;
+            --secondary: #48BFE3;
+            --pink: #FF9AA2;
+            --purple: #B39DDB;
+            --light-aqua: #E0F7FA;
+            --row-alt: #F0FBFD;
+            --text: #1e3a52;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+            background-color: #f4fcff;
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,105,148,0.1);
+        }
+
+        header {
+            text-align: center;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 30px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: var(--light-aqua);
+            font-size: 24px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            font-size: 14px;
+            color: #b2ebf2;
+        }
+
+        .bubbles {
+            text-align: center;
+            font-size: 20px;
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+
+        .metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: var(--light-aqua);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .meta-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-group label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .meta-group input {
+            padding: 8px;
+            border: 1px solid var(--secondary);
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .rules {
+            background-color: #fff3f4;
+            border-left: 5px solid var(--pink);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .rules strong {
+            color: var(--primary);
+        }
+
+        .section-header {
+            color: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 30px 0 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .bg-tier1 { background-color: var(--primary); }
+        .bg-tier2 { background-color: var(--secondary); }
+        .bg-tier3 { background-color: var(--purple); }
+        .bg-troll { background-color: var(--pink); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            border-bottom: 2px solid #b2ebf2;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: var(--light-aqua);
+            color: var(--primary);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        td:nth-child(1), td:nth-child(2) {
+            text-align: center;
+        }
+        
+        td:nth-child(4) {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--row-alt);
+        }
+
+        tr:hover {
+            background-color: #e6f9fc;
+        }
+
+        .task-text {
+            color: var(--text);
+            text-align: left;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.5);
+            accent-color: var(--secondary);
+            cursor: pointer;
+        }
+        
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            text-align: center;
+            font-family: inherit;
+        }
+        
+        input[type="file"] {
+            font-size: 11px;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        /* Custom file upload styling for a cleaner look */
+        input[type="file"]::file-selector-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background-color: var(--primary);
+        }
+
+        .floating-score {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 18px;
+            font-weight: bold;
+            border: 3px solid var(--secondary);
+            z-index: 1000;
+        }
+        
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--light-aqua);
+            border-radius: 10px;
+            border: 2px dashed var(--secondary);
+        }
+        
+        .submit-btn {
+            background-color: var(--pink);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: 3px solid var(--white);
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(255, 154, 162, 0.4);
+            transition: all 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(255, 154, 162, 0.6);
+            background-color: #ff858f;
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr { border: 2px solid var(--secondary); margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 35%;
+                text-align: left !important;
+            }
+            td:before {
+                position: absolute;
+                top: 12px;
+                left: 10px;
+                width: 30%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--primary);
+            }
+            td:nth-of-type(1):before { content: "Done! 🫧"; }
+            td:nth-of-type(2):before { content: "Clams 🐚"; }
+            td:nth-of-type(3):before { content: "Task 📸"; }
+            td:nth-of-type(4):before { content: "Upload 📤"; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-score">Total Clams: <span id="grand-total">0</span> 🐚</div>
+
+    <div class="container">
+        <header>
+            <h1>🌊 🐚 NEW ENGLAND AQUARIUM SEA SAFARI 🐬 🐙</h1>
+            <div class="subtitle">✨ The Ultimate Cute & Whimsical Team Scavenger Hunt • Collect Clams & Make Waves! 🪸 🪼 🐠</div>
+        </header>
+
+        <div class="bubbles">🫧 🪸 🐠 🐬 🫧 🦭 🐙 🫧 🐢 🪼 🫧 🐚 🦀 🫧 🐋 🐡 🫧</div>
+
+        <form id="safari-form">
+            <div class="metadata">
+                <div class="meta-group">
+                    <label>Pod / Team Name 🐬: <span style="color:red;">*</span></label>
+                    <input type="text" id="pod-name" required placeholder="e.g. Sea Explorers 🐙">
+                </div>
+                <div class="meta-group">
+                    <label>Dive In ⏰:</label>
+                    <input type="time" id="dive-in">
+                </div>
+                <div class="meta-group">
+                    <label>Surface ⏱️:</label>
+                    <input type="time" id="surface">
+                </div>
+            </div>
+
+            <div class="rules">
+                <strong>Ocean Code of Conduct 🌊:</strong> 1. Stick with your Pod at all times! 🐢 2. TEAM RULE: For every task, 1 designated pod member acts as the Official Camera Officer to shoot the rest of the team! Rotate the camera duties so everyone gets in on the fun! 3. Be super gentle & quiet. 4. Upload your photo/video proof directly next to each task to claim your clams! 📸🐚
+            </div>
+
+            <div id="tasks-container"></div>
+            
+            <div class="submit-container">
+                <p><strong>Ready to surface? ⏱️</strong> Make sure all your proof is attached!</p>
+                <button type="submit" class="submit-btn" id="submit-btn">Submit Safari Proof to Drive 🌊📤</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const tiers = [
+            {
+                title: "🌊 Tier 1: Quick Hits & Friendly Finds (10–20 Clams 🐚)",
+                class: "bg-tier1",
+                tasks: [
+                    { id: "t1_1", clams: 10, text: "Gather all pod members around Queen Myrtle the Green Sea Turtle in the Giant Ocean Tank background while 1 designated teammate takes the group photo! 🐢👑" },
+                    { id: "t1_2", clams: 10, text: "Locate the African, Rockhopper, and Little Blue penguin exhibits. Have all teammates pose together near each enclosure while 1 teammate captures the photos! 🐧" },
+                    { id: "t1_3", clams: 15, text: "Spot a leafy or weedy seadragon! Have all teammates point out its magical camouflage outline together while 1 teammate snaps the shot! 🪸✨" },
+                    { id: "t1_4", clams: 15, text: "Find an Atlantic harbor seal outdoors! Have teammates line up along the railing mimicking seal swims while 1 teammate captures the action! 🦭💦" },
+                    { id: "t1_5", clams: 15, text: "Find the pressed penny machine! All teammates point at their favorite penny designs while 1 teammate takes the photo! 🪙🔍" },
+                    { id: "t1_6", clams: 20, text: "Gather around an exhibit plaque showing a sea creature living over 30 years. Teammates pose like researchers examining it while 1 teammate takes the photo! 📜🎂" },
+                    { id: "t1_7", clams: 20, text: "Find the Giant Pacific Octopus display! All teammates gather at the glass counting 15+ suction cups together while 1 teammate takes the picture! 🐙" },
+                    { id: "t1_8", clams: 15, text: "Stand near the sea anemone exhibit! Teammates strike synchronized wiggly tentacle poses while 1 teammate snaps the group photo! 🪼💃" },
+                    { id: "t1_9", clams: 15, text: "Find a moray eel in a rock crevice! Teammates gather around mimicking the eel's open mouth while 1 teammate captures the photo! 🐍😮" },
+                    { id: "t1_10", clams: 20, text: "Find the American Lobster plaque! Teammates pose flexing their muscle arms next to the record weight sign while 1 teammate takes the photo! 🦞💪" },
+                    { id: "t1_11", clams: 15, text: "Position the team under the touch tank or main tank windows! Teammates look up in awe as a cownose ray floats above while 1 teammate captures the shot! 🪽🪁" },
+                    { id: "t1_12", clams: 20, text: "Locate clownfish and blue tang swimming together! Teammates gather at the tank pointing at Nemo & Dory while 1 teammate takes the photo! 🐠🎬" },
+                    { id: "t1_13", clams: 15, text: "Explore the Amazon Rainforest exhibit! Teammates gather around the piranha or anaconda display holding 'surprised' expressions while 1 teammate snaps the photo! 🌿🐍" },
+                    { id: "t1_14", clams: 15, text: "Visit the children's book section in the gift shop! Teammates sit together in a story circle listening as 1 teammate holds up a book & another snaps the photo! 📖📚" },
+                    { id: "t1_15", clams: 10, text: "Gather around the physical Level 1 wall map! All teammates point at your current location while 1 designated teammate takes the pod photo! 🗺️🧭" }
+                ]
+            },
+            {
+                title: "🪸 Tier 2: Interactive Quests & Staff Chat (30–50 Clams 🐚)",
+                class: "bg-tier2",
+                tasks: [
+                    { id: "t2_1", clams: 30, text: "Visit the Shark & Ray Touch Tank! All teammates gently touch a ray with two fingers while 1 designated teammate captures the group in action! 🖐️🌊" },
+                    { id: "t2_2", clams: 30, text: "Gather at the jellyfish exhibit! Teammates hold up phone screens showing handwritten facts about jellies while 1 teammate snaps the photo! 🪼🧠" },
+                    { id: "t2_3", clams: 35, text: "Find eco-friendly conservation items in the gift shop! Teammates hold up sea turtle rescue merch together while 1 teammate captures the photo! 🛍️🐢" },
+                    { id: "t2_4", clams: 40, text: "Walk together as a pod up the Giant Ocean Tank spiral ramp! At the top summit, teammates strike a synchronized victory pose while 1 teammate takes the photo! 🌀📸" },
+                    { id: "t2_5", clams: 40, text: "Find the largest plushie in the gift shop! Teammates hold up written price guesses next to the plushie while 1 teammate films the price tag reveal! 🧸🏷️" },
+                    { id: "t2_6", clams: 50, text: "Find an Aquarium educator! All teammates listen as 1 teammate asks their favorite animal story. Write down their response & name on your scorecard! 🎙️💬" },
+                    { id: "t2_7", clams: 50, text: "Gather at the ocean conservation display in Blue Planet Action Center! All teammates make a group pinky promise pose while 1 teammate takes the photo! 💙🤙" },
+                    { id: "t2_8", clams: 30, text: "Locate the coral reef restoration display! Teammates line up pointing at the coral nursery diagram while 1 teammate captures the photo! 🪸🌱" },
+                    { id: "t2_9", clams: 45, text: "Teammates all put on different ocean animal hats/headbands in the gift shop and pose together while 1 teammate takes the fast group photo (return hats neatly)! 🧢👑" },
+                    { id: "t2_10", clams: 35, text: "Find a deep-sea exhibit! Teammates gather holding 'gasp' faces at the dark ocean display while 1 teammate captures the dramatic photo! 🌊🌑" },
+                    { id: "t2_11", clams: 50, text: "Spot an aquarist feeding animals! Teammates gather along the glass watching in awe while 1 teammate captures the feeding photo! 🐟🥩" },
+                    { id: "t2_12", clams: 30, text: "Gather at the exact center base of Level 1 under the GOT spiral! Teammates circle up looking upward while 1 teammate snaps the photo showing the dome geometry! 📸🏛️" },
+                    { id: "t2_13", clams: 50, text: "Interview a staff member about their career path! All teammates listen together while 1 teammate records their name & response on your scorecard! 🎓👩‍🔬" },
+                    { id: "t2_14", clams: 35, text: "Find a seagrass exhibit! Teammates gather pointing at 2 ecological benefits listed on the panel while 1 teammate snaps the photo! 🌾🏡" },
+                    { id: "t2_15", clams: 40, text: "Find a venomous species exhibit! Teammates gather around the caution warning sign holding 'warning' poses while 1 teammate takes the picture! ⚠️🚫" },
+                    { id: "t2_16", clams: 30, text: "Visit the postcard rack! Each teammate holds up a postcard matching their personality while 1 teammate takes the group photo! ✉️💌" },
+                    { id: "t2_17", clams: 40, text: "Find an evolutionary adaptation display! Teammates gather around posing like attentive college students while 1 teammate takes the photo! 🎓🤓" },
+                    { id: "t2_18", clams: 30, text: "Head to the balcony overlooking Boston Harbor! Teammates line up in a dramatic harbor breeze pose while 1 teammate captures the photo! ⛵🏙️" },
+                    { id: "t2_19", clams: 40, text: "Find the electric eel or shark electro-reception panel! Teammates gather around the sensor display while 1 teammate takes the photo! ⚡🔌" },
+                    { id: "t2_20", clams: 35, text: "Locate a plankton exhibit! Teammates gather striking superhero poses next to the plankton diagram while 1 teammate takes the photo! 🦠✨" }
+                ]
+            },
+            {
+                title: "✨ Tier 3: Wild, Frantic & Whimsical (75–100 Clams 🐚)",
+                class: "bg-tier3",
+                tasks: [
+                    { id: "t3_1", clams: 100, text: "Find Stephanie walking around the aquarium! All teammates present your score sheet and proof to her in person while 1 teammate takes the pod photo with Stephanie! 🕵️‍♀️🔍" },
+                    { id: "t3_2", clams: 75, text: "Gather near the penguin enclosure! Teammates line up striking frozen, quiet penguin waddle poses while 1 teammate captures the group photo! 🐧🐧" },
+                    { id: "t3_3", clams: 75, text: "Gather at the ray exhibit! Teammates execute a synchronized wave at the glass as a ray swims past while 1 teammate captures the action photo! 🪽👋" },
+                    { id: "t3_4", clams: 75, text: "Pick up soft predator plushies in the gift shop! Teammates pose in a freeze-frame 'disaster movie poster' being attacked while 1 teammate takes the photo! 🎥🎬" },
+                    { id: "t3_5", clams: 80, text: "Gather at the Giant Ocean Tank! Teammates pose together trying to get Queen Myrtle to photobomb in the background while 1 teammate snaps the photo! 🐢🤳" },
+                    { id: "t3_6", clams: 90, text: "Gather at the Sand Tiger Shark display! Teammates hold stone-cold straight faces next to the shark teeth while 1 teammate takes the photo! 🦈😬" },
+                    { id: "t3_7", clams: 100, text: "Perform a team ocean rap! Teammates perform a 10-second rhyming chant naming 3 sea creatures while 1 designated teammate records the video! 🎤🎶" },
+                    { id: "t3_8", clams: 80, text: "Link hands as a pod at the touch tank! Teammates execute a smooth stadium wave as a ray swims by while 1 teammate captures the action photo! 🌊🙌" },
+                    { id: "t3_9", clams: 85, text: "Gather at the jelly tank! Teammates pose acting 'hypnotized' by swaying sea jellies while 1 designated teammate snaps the dramatic photo! 🎞️🌀" },
+                    { id: "t3_10", clams: 90, text: "Observe harbor seals! Teammates strike theatrical poses interpreting what the seals are thinking while 1 teammate snaps the group photo! 🦭🎭" },
+                    { id: "t3_11", clams: 100, text: "Find a staff member! Teammates gather around asking about animal care while 1 teammate takes a photo of the pod high-fiving them! 🖐️🙏" },
+                    { id: "t3_12", clams: 85, text: "Pose on the floor on Level 1 as a giant human manta ray (1 body, 4 wide wings) while 1 designated teammate takes the aerial group photo! 🪽🦅" },
+                    { id: "t3_13", clams: 100, text: "Visit the gift shop! Teammates line up posing like TV commercial pitch-people holding funny items while 1 teammate snaps the photo! 📺💡" },
+                    { id: "t3_14", clams: 80, text: "Gather at the glass! Teammates perform synchronized swimming poses matching a turtle/seal swimming past while 1 teammate takes the action photo! 🏊‍♀️" },
+                    { id: "t3_15", clams: 75, text: "Find the endangered species exhibit! Teammates pose like a TV news reporting crew in front of the panel while 1 teammate snaps the photo! 📰🎙️" },
+                    { id: "t3_16", clams: 85, text: "Line up down an empty stretch of the Giant Ocean Tank spiral ramp in a team conga line while 1 designated teammate snaps the photo! 🎷" },
+                    { id: "t3_17", clams: 90, text: "Find any statue or sculpture inside or outside! Teammates recreate its exact physical shape together while 1 teammate captures the photo! 🗿🗽" },
+                    { id: "t3_18", clams: 100, text: "Gather around a staff member! Teammates listen politely as 1 teammate gives a 10s guest lecture while another teammate captures the photo with staff! 🧑‍🏫📢" },
+                    { id: "t3_19", clams: 90, text: "Gather together! Perform a quick 10-second video making quiet ocean mouth sounds (whale songs, waves, dolphin clicks) while 1 teammate records! 🎶🐋" },
+                    { id: "t3_20", clams: 95, text: "Teammates 'blend into' a corner while 1 teammate acts as a marine researcher discovering them and another teammate snaps the photo! 🙈🔍" },
+                    { id: "t3_21", clams: 80, text: "Reach the topmost viewing deck of the Giant Ocean Tank! Teammates strike an epic victory pose together while 1 teammate snaps the group photo! 🏔️🚩" },
+                    { id: "t3_22", clams: 90, text: "Gather near Blue Planet Action Center! Teammates reenact a gentle 'medical checkup' on a plush sea turtle while 1 teammate takes the photo! 🩺🩹" },
+                    { id: "t3_23", clams: 85, text: "Gather on the floor near the entrance seal exhibit! Teammates strike a classic mermaid/merman rock pose together while 1 teammate snaps the photo! 🧜‍♀️🧜‍♂️" },
+                    { id: "t3_24", clams: 80, text: "Stand 10 feet apart across an open hall! Teammates make hilarious dolphin echolocation hand gestures to each other while 1 teammate snaps the photo! 🐬📡" },
+                    { id: "t3_25", clams: 100, text: "Walk up to an Aquarium employee together! Teammates thank them sincerely while 1 designated teammate takes the pod photo with the smiling employee! 💙💌" }
+                ]
+            },
+            {
+                title: "🦞 Safe & Silly: Physical Troll Dares (60–120 Clams 🐚)",
+                class: "bg-troll",
+                tasks: [
+                    { id: "t4_1", clams: 60, text: "Teammates line up holding up 'lobster claw' hands scuttling sideways down an open hallway while 1 teammate captures the photo! 🦞🦀" },
+                    { id: "t4_2", clams: 70, text: "Teammates place fists against the sides of their heads like hammerhead shark eyes while 1 teammate takes the group photo in an open area! 🦈" },
+                    { id: "t4_3", clams: 75, text: "Stand near the Pufferfish exhibit! Teammates puff out cheeks and hold arms in big circles like inflated pufferfish while 1 teammate takes the photo! 🐡🎈" },
+                    { id: "t4_4", clams: 80, text: "Stand near the flatfish exhibit! Teammates tuck arms like tiny T-Rex hands & tilt heads 90 degrees in a serious group chat while 1 teammate takes the photo! 🐟🦕" },
+                    { id: "t4_5", clams: 85, text: "Stand in an open area! Teammates hold rigid star-jump T-poses like starfish on a reef rock while 1 designated teammate snaps the photo! ⭐️⭐" },
+                    { id: "t4_6", clams: 100, text: "Teammates engage in a slow-motion 'lobster territory standoff' in an open aisle with claw hands while 1 teammate captures the action photo! 🦞⚔️" },
+                    { id: "t4_7", clams: 120, text: "Line up behind a low wall or ledge as a pod! Teammates pop up together like moray eels poking out of reef rocks while 1 teammate takes the photo! 🐍📦" },
+                    { id: "t4_8", clams: 80, text: "Find a stationary fish near the glass! Teammates lean in close holding an unblinking staring contest with the fish while 1 teammate snaps the photo! 👀👁️" },
+                    { id: "t4_9", clams: 75, text: "Gather near the sea anemone exhibit! Teammates link arms and strike a synchronized tentacle sway pose while 1 teammate takes the photo! 🪼💃" },
+                    { id: "t4_10", clams: 85, text: "Catch a fish opening its mouth near the glass! Teammates line up mimicking its open-mouthed expression while 1 teammate takes the side-by-side photo! 😮🥱" }
+                ]
+            }
+        ];
+
+        const container = document.getElementById('tasks-container');
+
+        tiers.forEach((tier, t_idx) => {
+            const header = document.createElement('div');
+            header.className = `section-header ${tier.class}`;
+            header.innerText = tier.title;
+            container.appendChild(header);
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th width="8%">Done! 🫧</th>
+                        <th width="12%">Clams 🐚</th>
+                        <th width="55%">Team Task Instructions 📸</th>
+                        <th width="25%">Upload Proof 📤</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tier.tasks.map((task) => `
+                        <tr>
+                            <td><input type="checkbox" class="task-check" data-val="${task.clams}"></td>
+                            <td><strong>${task.clams} clams</strong></td>
+                            <td class="task-text">${task.text}</td>
+                            <td><input type="file" name="proof_${task.id}" accept="image/*,video/*" multiple title="Upload photo/video proof"></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            container.appendChild(table);
+        });
+
+        // Uncapped Tasks
+        const uncappedHeader = document.createElement('div');
+        uncappedHeader.className = `section-header bg-tier1`;
+        uncappedHeader.innerText = "♾️ Infinite Clam Generators (Multiplier Quests 🐚)";
+        container.appendChild(uncappedHeader);
+
+        const uncappedTable = document.createElement('table');
+        uncappedTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th width="12%">Quantity 🫧</th>
+                    <th width="12%">Rate ⚡</th>
+                    <th width="51%">Task Instructions 📸</th>
+                    <th width="25%">Upload Proof 📤</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="25"></td>
+                    <td><strong>25 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
+                    <td class="task-text">Interview Aquarium staff members across the building! All teammates listen together while 1 teammate records their name, role, and favorite fish on your scorecard! 🧠📝</td>
+                    <td><input type="file" name="proof_uc1" accept="image/*,video/*" multiple></td>
+                </tr>
+                <tr>
+                    <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="5"></td>
+                    <td><strong>5 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
+                    <td class="task-text">Earn 5 clams for every unique marine species your pod poses with alongside its official exhibit plaque while 1 teammate takes the photo! 📸🐟</td>
+                    <td><input type="file" name="proof_uc2" accept="image/*,video/*" multiple></td>
+                </tr>
+                <tr>
+                    <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="15"></td>
+                    <td><strong>15 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
+                    <td class="task-text">Gather distinct species plushies in the gift shop! Teammates hold up the plushies together for 1 group photo before returning them neatly! 🧸</td>
+                    <td><input type="file" name="proof_uc3" accept="image/*,video/*" multiple></td>
+                </tr>
+                <tr>
+                    <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="20"></td>
+                    <td><strong>20 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
+                    <td class="task-text">Walk together as a pod up or down the Giant Ocean Tank spiral ramp! Take a team victory photo at the top or bottom for each completed loop! 🌀🏃‍♀️</td>
+                    <td><input type="file" name="proof_uc4" accept="image/*,video/*" multiple></td>
+                </tr>
+                <tr>
+                    <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="25"></td>
+                    <td><strong>25 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
+                    <td class="task-text">Spot an African Penguin making its donkey-like braying call! Teammates gather pointing at the penguin while 1 teammate takes the quick photo/clip! 🐧📢</td>
+                    <td><input type="file" name="proof_uc5" accept="image/*,video/*" multiple></td>
+                </tr>
+                <tr>
+                    <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="10"></td>
+                    <td><strong>10 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
+                    <td class="task-text">Deliver clean ocean puns to staff members as a team! Take a quick photo of your pod alongside the laughing/groaning staff member! 🐟😄</td>
+                    <td><input type="file" name="proof_uc6" accept="image/*,video/*" multiple></td>
+                </tr>
+            </tbody>
+        `;
+        container.appendChild(uncappedTable);
+
+        // Scoring Logic
+        function updateScore() {
+            let total = 0;
+            
+            // Checkboxes
+            document.querySelectorAll('.task-check:checked').forEach(cb => {
+                total += parseInt(cb.getAttribute('data-val'));
+            });
+
+            // Multipliers
+            document.querySelectorAll('.multiplier-input').forEach(input => {
+                const count = parseInt(input.value) || 0;
+                const rate = parseInt(input.getAttribute('data-rate'));
+                const rowScore = count * rate;
+                input.parentElement.nextElementSibling.querySelector('.row-score').innerText = rowScore;
+                total += rowScore;
+            });
+
+            document.getElementById('grand-total').innerText = total;
+        }
+
+        // Event listener for scoring and auto-checking boxes when files are uploaded
+        document.addEventListener('change', (e) => {
+            if (e.target.classList.contains('task-check') || e.target.classList.contains('multiplier-input')) {
+                updateScore();
+            }
+            
+            // Auto-check the "Done!" box if a file is uploaded
+            if (e.target.type === 'file' && e.target.files.length > 0) {
+                const tr = e.target.closest('tr');
+                const checkbox = tr.querySelector('.task-check');
+                if (checkbox && !checkbox.checked) {
+                    checkbox.checked = true;
+                    updateScore();
+                }
+            }
+        });
+        
+        // Helper function to convert files to Base64 so they can be sent securely
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]); // Extract just the base64 string
+                reader.onerror = error => reject(error);
+            });
+        }
+        
+        // Handle Real Form Submission
+        document.getElementById('safari-form').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const btn = document.getElementById('submit-btn');
+            const podName = document.getElementById('pod-name').value;
+            const score = document.getElementById('grand-total').innerText;
+            
+            // Gather all uploaded files from every input row
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            let filesData = [];
+            
+            for (let input of fileInputs) {
+                if (input.files.length > 0) {
+                    for (let file of input.files) {
+                        const base64 = await getBase64(file);
+                        filesData.push({
+                            filename: file.name,
+                            mimeType: file.type,
+                            base64: base64
+                        });
+                    }
+                }
+            }
+            
+            if (filesData.length === 0) {
+                const proceed = confirm("Wait! 🛑 You haven't uploaded any photo/video proof yet. Submit anyway?");
+                if(!proceed) return;
+            }
+            
+            // Change button state to loading
+            btn.innerHTML = 'Uploading to Drive... (This may take a minute) ⏳';
+            btn.style.backgroundColor = 'var(--secondary)';
+            btn.disabled = true;
+
+            // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ⚠️
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby9-U7R5LKZY40kFZwaNHWvr6F4-J4vtjzlZe-vHaPGZQgK7sLBaeNKco1kr-Sm4UKf5Q/exec';
+            
+            try {
+                // Send the data to Google Apps Script
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        podName: podName,
+                        files: filesData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    alert(`🎉 SUCCESS! 🎉\n\nYour proof has been saved to Google Drive!\n📁 Folder Created: "${podName} - Sea Safari Proof"\n📸 Total Files Uploaded: ${filesData.length}\n🌟 Final Claimed Score: ${score} Clams`);
+                    btn.innerHTML = 'Proof Uploaded! ✅';
+                    btn.style.backgroundColor = '#a8e6cf';
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                alert('Oops! Error uploading to Drive: ' + error.message);
+                btn.innerHTML = 'Submit Safari Proof to Drive 🌊📤';
+                btn.style.backgroundColor = 'var(--pink)';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
