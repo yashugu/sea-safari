@@ -557,7 +557,7 @@
             });
         }
         
-        // Handle Real Form Submission
+        // Handle Continuous/Frequent Submissions
         document.getElementById('safari-form').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
@@ -565,30 +565,25 @@
             const podName = document.getElementById('pod-name').value;
             const score = document.getElementById('grand-total').innerText;
             
-            // Gather all uploaded files from every input row
+            // Gather only newly selected/attached files
             const fileInputs = document.querySelectorAll('input[type="file"]');
             let filesData = [];
             
             for (let input of fileInputs) {
                 if (input.files.length > 0) {
                     for (let file of input.files) {
-                        const base64 = await getBase64(file);
-                        filesData.push({
-                            filename: file.name,
-                            mimeType: file.type,
-                            base64: base64
-                        });
+                        const compressedFile = await compressImage(file);
+                        filesData.push(compressedFile);
                     }
                 }
             }
             
             if (filesData.length === 0) {
-                const proceed = confirm("Wait! 🛑 You haven't uploaded any photo/video proof yet. Submit anyway?");
+                const proceed = confirm("Notice: You haven't attached any new photos or videos since your last sync. Submit status update anyway?");
                 if(!proceed) return;
             }
             
-            // Change button state to loading
-            btn.innerHTML = 'Uploading to Drive... (This may take a minute) ⏳';
+            btn.innerHTML = 'Syncing New Proof to Drive... ⚡';
             btn.style.backgroundColor = 'var(--secondary)';
             btn.disabled = true;
 
@@ -596,7 +591,6 @@
             const scriptURL = 'https://script.google.com/macros/s/AKfycby9-U7R5LKZY40kFZwaNHWvr6F4-J4vtjzlZe-vHaPGZQgK7sLBaeNKco1kr-Sm4UKf5Q/exec';
             
             try {
-                // Send the data to Google Apps Script
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -608,15 +602,18 @@
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    alert(`🎉 SUCCESS! 🎉\n\nYour proof has been saved to Google Drive!\n📁 Folder Created: "${podName} - Sea Safari Proof"\n📸 Total Files Uploaded: ${filesData.length}\n🌟 Final Claimed Score: ${score} Clams`);
-                    btn.innerHTML = 'Proof Uploaded! ✅';
-                    btn.style.backgroundColor = '#a8e6cf';
+                    alert(`🌊 SYNC SUCCESSFUL! 🌊\n\nYour new proof was safely added to the Google Drive folder for "${podName}"!\n📸 Files Synced in this batch: ${filesData.length}\n🌟 Current Total Score: ${score} Clams\n\nKeep going! You can continue checking off tasks and syncing more proof anytime.`);
+                    
+                    // Reset button so they can click it again later for the next batch
+                    btn.innerHTML = 'Sync More Proof to Drive 🔄';
+                    btn.style.backgroundColor = 'var(--pink)';
+                    btn.disabled = false;
                 } else {
                     throw new Error(result.message);
                 }
             } catch (error) {
-                alert('Oops! Error uploading to Drive: ' + error.message);
-                btn.innerHTML = 'Submit Safari Proof to Drive 🌊📤';
+                alert('Oops! Error syncing to Drive: ' + error.message);
+                btn.innerHTML = 'Sync More Proof to Drive 🔄';
                 btn.style.backgroundColor = 'var(--pink)';
                 btn.disabled = false;
             }
