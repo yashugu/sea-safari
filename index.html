@@ -443,7 +443,7 @@
                             <td><input type="checkbox" class="task-check" data-val="${task.clams}"></td>
                             <td><strong>${task.clams} clams</strong></td>
                             <td class="task-text">${task.text}</td>
-                            <td><input type="file" name="proof_${task.id}" accept="image/*,video/*" multiple title="Upload photo/video proof"></td>
+                            <td><input type="file" name="proof_${task.id}" data-task-id="${task.id}" data-task-text="${task.text.replace(/"/g, '&quot;')}" accept="image/*,video/*" multiple title="Upload photo/video proof"></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -472,37 +472,37 @@
                     <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="25"></td>
                     <td><strong>25 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
                     <td class="task-text">Interview Aquarium staff members across the building! All teammates listen together while 1 teammate records their name, role, and favorite fish on your scorecard! 🧠📝</td>
-                    <td><input type="file" name="proof_uc1" accept="image/*,video/*" multiple></td>
+                    <td><input type="file" name="proof_uc1" data-task-id="uc1" data-task-text="Interview Aquarium staff members" accept="image/*,video/*" multiple></td>
                 </tr>
                 <tr>
                     <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="5"></td>
                     <td><strong>5 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
                     <td class="task-text">Earn 5 clams for every unique marine species your pod poses with alongside its official exhibit plaque while 1 teammate takes the photo! 📸🐟</td>
-                    <td><input type="file" name="proof_uc2" accept="image/*,video/*" multiple></td>
+                    <td><input type="file" name="proof_uc2" data-task-id="uc2" data-task-text="Unique marine species exhibit plaque photos" accept="image/*,video/*" multiple></td>
                 </tr>
                 <tr>
                     <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="15"></td>
                     <td><strong>15 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
                     <td class="task-text">Gather distinct species plushies in the gift shop! Teammates hold up the plushies together for 1 group photo before returning them neatly! 🧸</td>
-                    <td><input type="file" name="proof_uc3" accept="image/*,video/*" multiple></td>
+                    <td><input type="file" name="proof_uc3" data-task-id="uc3" data-task-text="Distinct species plushies photo" accept="image/*,video/*" multiple></td>
                 </tr>
                 <tr>
                     <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="20"></td>
                     <td><strong>20 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
                     <td class="task-text">Walk together as a pod up or down the Giant Ocean Tank spiral ramp! Take a team victory photo at the top or bottom for each completed loop! 🌀🏃‍♀️</td>
-                    <td><input type="file" name="proof_uc4" accept="image/*,video/*" multiple></td>
+                    <td><input type="file" name="proof_uc4" data-task-id="uc4" data-task-text="Giant Ocean Tank spiral ramp loop photo" accept="image/*,video/*" multiple></td>
                 </tr>
                 <tr>
                     <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="25"></td>
                     <td><strong>25 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
                     <td class="task-text">Spot an African Penguin making its donkey-like braying call! Teammates gather pointing at the penguin while 1 teammate takes the quick photo/clip! 🐧📢</td>
-                    <td><input type="file" name="proof_uc5" accept="image/*,video/*" multiple></td>
+                    <td><input type="file" name="proof_uc5" data-task-id="uc5" data-task-text="African Penguin braying call capture" accept="image/*,video/*" multiple></td>
                 </tr>
                 <tr>
                     <td><input type="number" min="0" value="0" class="multiplier-input" data-rate="10"></td>
                     <td><strong>10 / ea</strong><br><span class="row-score" style="color:var(--primary); font-weight:bold;">0</span> pts</td>
                     <td class="task-text">Deliver clean ocean puns to staff members as a team! Take a quick photo of your pod alongside the laughing/groaning staff member! 🐟😄</td>
-                    <td><input type="file" name="proof_uc6" accept="image/*,video/*" multiple></td>
+                    <td><input type="file" name="proof_uc6" data-task-id="uc6" data-task-text="Ocean puns with staff photo" accept="image/*,video/*" multiple></td>
                 </tr>
             </tbody>
         `;
@@ -538,16 +538,21 @@
             }
         });
         
-        // --- UNCOMPRESSED FILE READER (ORIGINAL FULL QUALITY) ---
-        function getBase64(file) {
+        // --- FILE READER EXPLICITLY CONNECTED TO TASK ID & TEXT ---
+        function getBase64(file, taskId) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = () => resolve({
-                    filename: file.name,
-                    mimeType: file.type,
-                    base64: reader.result.split(',')[1]
-                });
+                reader.onload = () => {
+                    // Prepend taskId to filename to make the mapping completely transparent in Google Drive
+                    const safeName = taskId + "_" + file.name;
+                    resolve({
+                        filename: safeName,
+                        taskId: taskId,
+                        mimeType: file.type,
+                        base64: reader.result.split(',')[1]
+                    });
+                };
                 reader.onerror = error => reject(error);
             });
         }
@@ -566,14 +571,19 @@
             const fileInputs = document.querySelectorAll('input[type="file"]');
             let filesData = [];
             
-            btn.innerHTML = 'Reading Full-Resolution Files... ⏳';
+            btn.innerHTML = 'Connecting Files to Tasks... ⏳';
             btn.style.backgroundColor = 'var(--secondary)';
             btn.disabled = true;
 
             for (let input of fileInputs) {
                 if (input.files.length > 0) {
+                    // Explicitly retrieve the connected Task ID
+                    const taskId = input.getAttribute('data-task-id') || input.name;
+                    const taskText = input.getAttribute('data-task-text') || "";
+                    
                     for (let file of input.files) {
-                        const fileObj = await getBase64(file);
+                        const fileObj = await getBase64(file, taskId);
+                        fileObj.taskDescription = taskText; // Explicit task text linkage
                         filesData.push(fileObj);
                     }
                 }
@@ -589,7 +599,7 @@
                 }
             }
             
-            btn.innerHTML = 'Uploading Full Quality to Drive... 🚀';
+            btn.innerHTML = 'Uploading Task-Linked Proof... 🚀';
 
             // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ⚠️
             const scriptURL = 'https://script.google.com/macros/s/AKfycby9-U7R5LKZY40kFZwaNHWvr6F4-J4vtjzlZe-vHaPGZQgK7sLBaeNKco1kr-Sm4UKf5Q/exec';
@@ -606,7 +616,7 @@
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    alert(`🎉 SUCCESS! 🎉\n\nYour uncompressed proof has been saved to Google Drive in full original quality!\n📁 Folder Created/Updated: "${podName} - Sea Safari Proof"\n📸 Total Files Synced: ${filesData.length}\n🌟 Current Total Score: ${score} Clams`);
+                    alert(`🎉 SUCCESS! 🎉\n\nYour task-connected proof has been securely saved to Google Drive!\n📁 Folder Created/Updated: "${podName} - Sea Safari Proof"\n📸 Total Files Linked & Synced: ${filesData.length}\n🌟 Current Total Score: ${score} Clams`);
                     btn.innerHTML = 'Sync More Proof to Drive 🔄';
                     btn.style.backgroundColor = 'var(--pink)';
                     btn.disabled = false;
